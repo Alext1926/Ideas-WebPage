@@ -4,31 +4,28 @@ use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\Auth\SessionsController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Idea;
-//index
-Route::get('/ideas',[IdeaController::class,'index']);
 
-//create
-Route::get('/ideas/create', [IdeaController::class, 'create']);
+Route::get('/',Function(){
+    return 'Welcome to the home page';
+});
 
-//store
-Route::post('/ideas',[IdeaController::class,'store']);
+Route::middleware('auth')->group(function () {
+    Route::get('/ideas', [IdeaController::class, 'index']);
+    Route::get('/ideas/create', [IdeaController::class, 'create']);
+    Route::post('/ideas', [IdeaController::class, 'store']);
+    Route::get('/ideas/{idea}', [IdeaController::class, 'show']);
+    Route::get('/ideas/{idea}/edit', [IdeaController::class, 'edit']);
+    Route::patch('/ideas/{idea}', [IdeaController::class, 'update']);
+    Route::delete('/ideas/{idea}', [IdeaController::class, 'destroy']);
 
-//show
-Route::get('/ideas/{idea}',[IdeaController::class,'show']);
+    Route::delete('/logout', [SessionsController::class, 'destroy']);
+});
 
-//edit
-Route::get('/ideas/{idea}/edit',[IdeaController::class,'edit']);
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisteredUserController::class, 'create']);
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+    Route::get('/login', [SessionsController::class, 'create'])->name('login');
+    Route::post('/login', [SessionsController::class, 'store']);
+});
 
-//update
-Route::patch('/ideas/{idea}',[IdeaController::class,'update']);
 
-//Destroy
-Route::delete('/ideas/{idea}',[IdeaController::class,'destroy']);
-
-//Register
-Route::get('register',[RegisteredUserController::class, 'create']);
-Route::post('register',[RegisteredUserController::class, 'store']);
-
-Route::get('/login',[SessionsController::class, 'create']);
-Route::post('/login',[SessionsController::class, 'store']);
-Route::delete('/logout',[SessionsController::class, 'destroy']);

@@ -38,7 +38,7 @@ class SessionsController extends Controller
  $validated = $request->validate([
     'email'=>['required','string','email','max:255'],
     'password'=>['required','string',Password::default()],
-]) ;
+        ]) ;
         //attempt a login
         if (Auth::attempt($validated)){
             $request->session()->regenerate();
